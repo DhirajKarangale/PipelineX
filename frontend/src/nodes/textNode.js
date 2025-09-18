@@ -6,7 +6,7 @@ import { useStore } from "../store";
 import { BsTextareaT } from "react-icons/bs";
 
 export const TextNode = ({ id, data, isConnectable }) => {
-  const [text, setText] = useState(data?.text || "{{input}}");
+  const [text, setText] = useState(data?.text || "text");
 
   const { updateNodeField } = useStore((state) => ({
     updateNodeField: state.updateNodeField,
