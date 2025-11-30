@@ -10,7 +10,7 @@ const selector = (state) => ({
 
 export const SubmitButton = () => {
   const base_url = "https://pipelinex.onrender.com";
-  const api = `${base_url}/pipelines/parse`;
+  const api_url = `${base_url}/pipelines/parse`;
 
   const { nodes, edges } = useStore(selector, shallow);
   const [submitted, setSubmitted] = useState(false);
@@ -20,7 +20,7 @@ export const SubmitButton = () => {
     const data = { nodes: nodes, edges: edges };
 
     try {
-      const response = await fetch(api, {
+      const response = await fetch(api_url, {
         method: "POST",
         headers: {
           "Content-Type": "Application/json",
