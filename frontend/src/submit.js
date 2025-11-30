@@ -9,7 +9,7 @@ const selector = (state) => ({
 });
 
 export const SubmitButton = () => {
-  const base_url = "https://pipelinex.onrender.com";
+  const base_url = process.env.REACT_APP_API_URL;;
   const api_url = `${base_url}/pipelines/parse`;
 
   const { nodes, edges } = useStore(selector, shallow);
