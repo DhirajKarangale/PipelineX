@@ -17,7 +17,6 @@ export const PipelineToolbar = () => {
   return (
     <div
       style={{
-        height: "12vh",
         padding: "5px 10px",
         backgroundColor: "#FFFFFF",
         borderRadius: "0px",
@@ -26,6 +25,9 @@ export const PipelineToolbar = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+
+        flexWrap: "wrap",
+        rowGap: "10px",
       }}
     >
       <div
@@ -33,6 +35,9 @@ export const PipelineToolbar = () => {
           display: "flex",
           flexWrap: "wrap",
           columnGap: "10px",
+
+          rowGap: "10px",
+          flex: "1 1 auto",
         }}
       >
         <DraggableNode
@@ -82,7 +87,7 @@ export const PipelineToolbar = () => {
         />
       </div>
 
-      <div>
+      <div style={{ flexShrink: 0 }}>
         <SubmitButton />
       </div>
 

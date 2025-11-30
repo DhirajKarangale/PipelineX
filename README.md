@@ -1,86 +1,145 @@
-# 🌐 FlowLink
+# 🚀 PipelineX — Visual AI Pipeline Builder
 
-FlowLink is a full-stack pipeline builder prototype that lets users create and connect nodes visually using React Flow.
-The backend, powered by FastAPI, validates pipelines by counting nodes/edges and checking whether the graph forms a DAG (Directed Acyclic Graph).
-
-Built with a React frontend, FastAPI backend, and Redis for token/session management.
+PipelineX is a **full‑stack visual pipeline builder** that lets you drag, drop, and connect functional nodes to create AI and automation workflows.  
+Built using **React Flow**, powered by a **FastAPI backend**, and structured for real-world extensibility.
 
 ---
 
-## ✨ Features
-- 🖥️ React Flow frontend for visual pipeline creation
-- ⚡ FastAPI backend for pipeline validation
-- 🔗 Custom node types (inputs, outputs, LLMs, text, etc.) with a shared abstraction
-- 📦 Dynamic Text Node that resizes with input and supports variable handles ({{variable}})
-- 📊 Backend validation: returns number of nodes, number of edges, and DAG check
-- 🎨 Unified styling across all nodes and components
+# 🎥 Live Preview
+
+### 🌟 PipelineX Screenshot
+![PipelineX Screenshot](preview/PipelineX.png)
+
+### ⚡ Demo GIF — Build a Pipeline Visually
+![PipelineX Demo](preview/PipelineX.gif)
 
 ---
 
-## 🛠 Tech Stack
-- **Frontend**: React, JavaScript, React Flow, Zustand
-- **Backend**: Python, FastAPI, Uvicorn  
-- **Cache/DB**: Redis (via Docker)  
-- **Other Tools**: Node.js, npm, Docker  
+# ✨ Features
+
+### 🎛 Visual Pipeline Editor  
+- Drag‑and‑drop nodes  
+- Connect inputs → processors → outputs  
+- Smart responsive toolbar  
+- Shared abstraction across all node types  
+
+### 🔍 Backend Validation (FastAPI)  
+- Counts nodes  
+- Counts edges  
+- Validates if the graph is a DAG (no circular pipelines)
+
+### 🧩 Rich Node Library  
+- Input  
+- Text Processor  
+- File Upload  
+- LLM  
+- Decision  
+- Merge  
+- Output  
+- Result
+
+### 🎨 UI Enhancements  
+- Clean, unified styling  
+- Dynamic text resizing  
+- Variable handle support using `{{variable}}`  
 
 ---
 
-## ⚙️ Setup Instructions
+# ⚙️ Tech Stack
 
-### 🔹 1. Clone the Repository
-```bash
-git clone https://github.com/DhirajKarangale/FlowLink.git
-cd FlowLink
+| Layer     | Technologies |
+|-----------|--------------|
+| Frontend  | React, React Flow, Zustand |
+| Backend   | FastAPI, Python, Uvicorn |
+| Cache     | Redis (Docker) |
+| Dev Tools | Node.js, npm |
+
+---
+
+# 📂 Project Structure
+
+```
+PipelineX/
+│
+├── backend/
+│   └── main.py
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── nodes/
+│   │   ├── store.js
+│   │   ├── toolbar.js
+│   │   ├── submit.js
+│   │   └── App.js
+│   └── package.json
+│
+└── README.md
 ```
 
-### 🔹 2. Backend Setup
-```bash
-# Navigate to backend folder
-cd backend
+---
 
-# Run the backend server
+# 🚀 Getting Started
+
+## 1️⃣ Clone Repository
+```bash
+git clone https://github.com/DhirajKarangale/PipelineX.git
+cd PipelineX
+```
+
+---
+
+## 2️⃣ Backend Setup (FastAPI)
+```bash
+cd backend
+pip install fastapi uvicorn
 uvicorn main:app --reload
 ```
 
-The backend will be available at: **http://localhost:8000**
+Backend: **http://localhost:8000**
 
-### 🔹 3. Frontend Setup
+---
+
+## 3️⃣ Frontend Setup (React)
 ```bash
-# Navigate to frontend folder
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the frontend server
 npm run start
 ```
 
-The frontend will be available at: **http://localhost:3000**
+Frontend: **http://localhost:3000**
 
 ---
 
-## 📂 Project Structure
-```
-FlowLink/
-├── backend/               # FastAPI backend
-│   ├── main.py            # FastAPI entrypoint
-├── frontend/              # React frontend
-│   ├── src/               # React source code
-│   │   ├── nodes/         # Node components
-│   │   ├── store/         # Zustand global store
-│   │   └── submit.js      # Submit button logic
-│   └── package.json       # Frontend dependencies
-└── README.md              # Project documentation
+# 🛠 Usage
 
-```
+1. Open the app (port 3000).  
+2. Drag nodes from the toolbar onto the canvas.  
+3. Connect nodes visually.  
+4. Configure each node using the built‑in form.  
+5. Click **Submit** to validate pipeline structure.  
+6. FastAPI returns:  
+   - Node count  
+   - Edge count  
+   - DAG validity  
 
 ---
 
-## 🚀 Usage
-1. Run the backend server (FastAPI + Uvicorn)  
-2. Run the frontend (React)  
-3. Open the app at **http://localhost:3000**  
-4. Build pipelines visually, connect nodes, and test integrations.
+# 🧭 Roadmap
+
+- [ ] Pipeline execution engine  
+- [ ] Node‑level rules & validations  
+- [ ] JSON import/export  
+- [ ] Templates (e.g., AI pipelines)  
+- [ ] Authentication & cloud sync  
 
 ---
+
+# 🤝 Contributing
+PRs welcome — especially new nodes, UI improvements, and validation logic.
+
+---
+
+# ⭐ Support the Project
+If you like PipelineX, give it a **GitHub star** ⭐ and share it!
+
