@@ -4,30 +4,31 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-#Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'],
+    allow_origins=["http://localhost:3000", "*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
-    )
+    allow_headers=["*"],
+)
 
-@app.get('/')
+
+@app.get("/")
 def read_root():
-    return {'Ping': 'Pong'}
+    return {"Ping": "Pong"}
+
 
 class PipelineData(BaseModel):
     nodes: list
     edges: list
 
 
-@app.post('/pipelines/parse')
+@app.post("/pipelines/parse")
 def parse_pipeline(pipeline: PipelineData):
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)
 
-    #Logic to determine if it is a DAG
+    # Logic to determine if it is a DAG
     degrees = {}
 
     stack = []
@@ -42,12 +43,11 @@ def parse_pipeline(pipeline: PipelineData):
         if node["id"] not in degrees:
             stack.append(node["id"])
 
-    
-    while len(stack) > 0 :
-        #get first element of stack
+    while len(stack) > 0:
+        # get first element of stack
         currentNode = stack.pop(0)
 
-        #find the connections of that node in edges
+        # find the connections of that node in edges
         for edge in pipeline.edges:
             if currentNode == edge["source"]:
                 connection = edge["target"]
@@ -58,11 +58,10 @@ def parse_pipeline(pipeline: PipelineData):
 
     dag = True
 
-    #loop through
+    # loop through
     for connection in degrees.values():
         if connection > 0:
             dag = False
             break
 
-    return {'num_nodes': num_nodes, 'num_edges': num_edges, 'is_dag': dag}
-
+    return {"num_nodes": num_nodes, "num_edges": num_edges, "is_dag": dag}
