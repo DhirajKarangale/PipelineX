@@ -7,11 +7,11 @@ Built using **React Flow**, powered by a **FastAPI backend**, and structured for
 
 # 🎥 Live Preview
 
-### 🌟 PipelineX Screenshot
-![PipelineX Screenshot](preview/PipelineX.png)
-
 ### ⚡ Demo GIF — Build a Pipeline Visually
 ![PipelineX Demo](preview/PipelineX.gif)
+
+### 🌟 PipelineX Screenshot
+![PipelineX Screenshot](preview/PipelineX.png)
 
 ---
 
