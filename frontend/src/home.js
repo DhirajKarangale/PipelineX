@@ -2,7 +2,6 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import { motion } from "framer-motion";
 import { useStore } from "./store/store";
-import { shallow } from "zustand/shallow";
 
 import InputNode from "./nodes/inputNode";
 import LLMNode from "./nodes/llmNode";
@@ -62,7 +61,7 @@ export const Home = () => {
     onNodesChange,
     onEdgesChange,
     onConnect,
-  } = useStore(selector, shallow);
+  } = useStore();
 
   useEffect(() => {
     const handleKeyDown = (e) => {

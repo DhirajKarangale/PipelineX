@@ -1,19 +1,13 @@
 import { memo, useState, useEffect, useCallback } from "react";
-import { shallow } from "zustand/shallow";
 import { motion } from "framer-motion";
 import { useStore } from "../store/store";
 import { ModalNotification } from "./modalNotification";
-
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-});
 
 const SubmitButton = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
   const apiUrl = `${baseUrl}/pipelines/parse`;
 
-  const { nodes, edges } = useStore(selector, shallow);
+  const { nodes, edges } = useStore();
 
   const [submitted, setSubmitted] = useState(false);
   const [currData, setCurrData] = useState(null);
@@ -22,6 +16,12 @@ const SubmitButton = () => {
 
   const handleClick = useCallback(async () => {
     if (loading) return;
+
+    if (!nodes || nodes.length === 0) {
+      setError("Add some nodes to your pipeline before submitting");
+      setSubmitted(true);
+      return;
+    }
 
     const payload = { nodes, edges };
 
@@ -45,6 +45,7 @@ const SubmitButton = () => {
       }
 
       const data = await response.json();
+
       setCurrData(data);
       setSubmitted(true);
     } catch (err) {
