@@ -11,6 +11,9 @@ export const useStore = create((set, get) => ({
   edges: [],
   nodeIDs: {},
   selectedNodes: new Set(),
+  isMultiSelect: false,
+
+  setMultiSelect: (val) => set({ isMultiSelect: val }),
 
   getNodeID: (type) => {
     const newIDs = { ...get().nodeIDs };
@@ -50,15 +53,15 @@ export const useStore = create((set, get) => ({
 
       const anyEdgeSelected = updatedEdges.some((e) => e.selected);
 
-      return {
-        edges: updatedEdges,
+      if (anyEdgeSelected && !state.isMultiSelect) {
+        return {
+          edges: updatedEdges,
+          nodes: state.nodes.map((n) => ({ ...n, selected: false })),
+          selectedNodes: new Set(),
+        };
+      }
 
-        nodes: anyEdgeSelected
-          ? state.nodes.map((n) => ({ ...n, selected: false }))
-          : state.nodes,
-
-        selectedNodes: anyEdgeSelected ? new Set() : state.selectedNodes,
-      };
+      return { edges: updatedEdges };
     });
   },
   onConnect: (connection) => {

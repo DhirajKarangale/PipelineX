@@ -89,6 +89,26 @@ export const Home = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedNodes, edges, removeNode, setEdges]);
 
+  useEffect(() => {
+    const down = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        useStore.getState().setMultiSelect(true);
+      }
+    };
+
+    const up = () => {
+      useStore.getState().setMultiSelect(false);
+    };
+
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
+
+    return () => {
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up);
+    };
+  }, []);
+
   const getInitNodeData = (nodeID, type) => ({
     id: nodeID,
     nodeType: type,
