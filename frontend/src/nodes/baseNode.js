@@ -19,7 +19,8 @@ const BaseNode = ({
         setSelectedNode: state.setSelectedNode,
     }));
 
-    const isSelected = selectedNode === id;
+    const selectedNodes = useStore((s) => s.selectedNodes);
+    const isSelected = selectedNodes.has(id);
 
     const handleRemove = (e) => {
         e.stopPropagation();
@@ -30,7 +31,8 @@ const BaseNode = ({
         <motion.div
             onClick={(e) => {
                 e.stopPropagation();
-                setSelectedNode(id);
+                // setSelectedNode(id);
+                setSelectedNode(id, e.ctrlKey || e.metaKey);
             }}
 
             initial={{ scale: 0.92, opacity: 0 }}

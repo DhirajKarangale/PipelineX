@@ -10,7 +10,8 @@ export const useStore = create((set, get) => ({
   nodes: [],
   edges: [],
   nodeIDs: {},
-  selectedNode: null,
+  // selectedNode: null,
+  selectedNodes: new Set(),
 
   getNodeID: (type) => {
     const newIDs = { ...get().nodeIDs };
@@ -35,9 +36,26 @@ export const useStore = create((set, get) => ({
   setEdges: (edges) => set({ edges }),
 
   onEdgesChange: (changes) => {
+    // set((state) => {
+    //   let updatedEdges = applyEdgeChanges(changes, state.edges);
+    //   updatedEdges = updatedEdges.map((edge) => ({
+    //     ...edge,
+    //     style: {
+    //       ...edge.style,
+    //       stroke: edge.selected ? "#3b82f6" : "#888",
+    //     },
+    //     markerEnd: {
+    //       ...edge.markerEnd,
+    //       color: edge.selected ? "#3b82f6" : "#888",
+    //     },
+    //   }));
+
+    //   return { edges: updatedEdges };
+    // });
+
+
     set((state) => {
-      let updatedEdges = applyEdgeChanges(changes, state.edges);
-      updatedEdges = updatedEdges.map((edge) => ({
+      const updatedEdges = applyEdgeChanges(changes, state.edges).map((edge) => ({
         ...edge,
         style: {
           ...edge.style,
@@ -49,9 +67,13 @@ export const useStore = create((set, get) => ({
         },
       }));
 
-      return { edges: updatedEdges };
-    });
+      const anyEdgeSelected = updatedEdges.some((e) => e.selected);
 
+      return {
+        edges: updatedEdges,
+        selectedNode: anyEdgeSelected ? null : state.selectedNode,
+      };
+    });
   },
   onConnect: (connection) => {
     set({
@@ -89,5 +111,29 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  setSelectedNode: (nodeId) => set({ selectedNode: nodeId }),
+  // setSelectedNode: (nodeId) => set({ selectedNode: nodeId }),
+
+  setSelectedNode: (nodeId, multi = false) =>
+    set((state) => {
+      const next = new Set(state.selectedNodes);
+
+      if (!multi) next.clear();
+
+      if (next.has(nodeId)) next.delete(nodeId);
+      else next.add(nodeId);
+
+      return {
+        selectedNodes: next,
+        edges: multi
+          ? state.edges
+          : state.edges.map((e) => ({
+            ...e,
+            selected: false,
+            style: { ...e.style, stroke: "#888" },
+            markerEnd: { ...e.markerEnd, color: "#888" },
+          })),
+      };
+    }),
+
+
 }));

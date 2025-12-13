@@ -25,11 +25,10 @@ const NumberNode = ({ id, data }) => {
                     onPointerDown={stop}
                     placeholder="Enter number"
                     className="
-            w-full bg-gray-50 px-2 py-1 rounded-md
-            border border-gray-400 outline-none
-            focus:ring-1 focus:ring-gray-400/50
-            transition-all duration-150
-          "
+                    w-full bg-gray-50 px-2 py-1 rounded-md
+                    border border-gray-400 outline-none
+                    focus:ring-1 focus:ring-gray-400/50
+                    transition-all duration-150"
                 />
 
                 <div className="text-xs text-gray-500 italic">
