@@ -12,6 +12,10 @@
   border: 1px solid white;
 }
 
+.react-flow__handle {
+  z-index: 10;
+}
+
 .react-flow__handle.handle:hover {
   background: #bdc7c5 !important;
   border: 2px solid #a6b4b1;
