@@ -31,7 +31,6 @@ const BaseNode = ({
         <motion.div
             onClick={(e) => {
                 e.stopPropagation();
-                // setSelectedNode(id);
                 setSelectedNode(id, e.ctrlKey || e.metaKey);
             }}
 

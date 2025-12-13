@@ -39,6 +39,7 @@ const selector = (state) => ({
   addNode: state.addNode,
   removeNode: state.removeNode,
   setSelectedNode: state.setSelectedNode,
+  clearSelection: state.clearSelection,
   setEdges: state.setEdges,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
@@ -57,37 +58,37 @@ export const Home = () => {
     addNode,
     removeNode,
     setSelectedNode,
+    clearSelection,
     setEdges,
     onNodesChange,
     onEdgesChange,
     onConnect,
   } = useStore(selector, shallow);
 
-  /* -------------------- Keyboard delete -------------------- */
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key !== "Delete") return;
 
-      // if (selectedNode) {
-      //   removeNode(selectedNode);
-      // } else {
-      //   setEdges(edges.filter((edge) => !edge.selected));
-      // }
+      const { nodes, edges } = useStore.getState();
 
-      if (selectedNodes.size > 0) {
-        selectedNodes.forEach((id) => removeNode(id));
-        return;
+      const selectedNodeIds = nodes.filter((n) => n.selected).map((n) => n.id);
+      const selectedEdges = edges.filter((e) => e.selected);
+
+      selectedNodeIds.forEach((id) => {
+        useStore.getState().removeNode(id);
+      });
+
+      if (selectedEdges.length) {
+        useStore
+          .getState()
+          .setEdges(edges.filter((e) => !e.selected));
       }
-
-      const remainingEdges = edges.filter((e) => !e.selected);
-      setEdges(remainingEdges);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedNodes, edges, removeNode, setEdges]);
 
-  /* -------------------- Helpers -------------------- */
   const getInitNodeData = (nodeID, type) => ({
     id: nodeID,
     nodeType: type,
@@ -128,7 +129,6 @@ export const Home = () => {
     event.dataTransfer.dropEffect = "move";
   }, []);
 
-  /* -------------------- Render -------------------- */
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -137,7 +137,7 @@ export const Home = () => {
       ref={reactFlowWrapper}
       onClick={(e) => {
         if (e.target.classList.contains("react-flow__pane")) {
-          setSelectedNode(null);
+          clearSelection();
         }
       }}
       className="

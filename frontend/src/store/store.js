@@ -10,7 +10,6 @@ export const useStore = create((set, get) => ({
   nodes: [],
   edges: [],
   nodeIDs: {},
-  // selectedNode: null,
   selectedNodes: new Set(),
 
   getNodeID: (type) => {
@@ -36,24 +35,6 @@ export const useStore = create((set, get) => ({
   setEdges: (edges) => set({ edges }),
 
   onEdgesChange: (changes) => {
-    // set((state) => {
-    //   let updatedEdges = applyEdgeChanges(changes, state.edges);
-    //   updatedEdges = updatedEdges.map((edge) => ({
-    //     ...edge,
-    //     style: {
-    //       ...edge.style,
-    //       stroke: edge.selected ? "#3b82f6" : "#888",
-    //     },
-    //     markerEnd: {
-    //       ...edge.markerEnd,
-    //       color: edge.selected ? "#3b82f6" : "#888",
-    //     },
-    //   }));
-
-    //   return { edges: updatedEdges };
-    // });
-
-
     set((state) => {
       const updatedEdges = applyEdgeChanges(changes, state.edges).map((edge) => ({
         ...edge,
@@ -71,7 +52,12 @@ export const useStore = create((set, get) => ({
 
       return {
         edges: updatedEdges,
-        selectedNode: anyEdgeSelected ? null : state.selectedNode,
+
+        nodes: anyEdgeSelected
+          ? state.nodes.map((n) => ({ ...n, selected: false }))
+          : state.nodes,
+
+        selectedNodes: anyEdgeSelected ? new Set() : state.selectedNodes,
       };
     });
   },
@@ -111,7 +97,16 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  // setSelectedNode: (nodeId) => set({ selectedNode: nodeId }),
+  clearSelection: () =>
+    set((state) => ({
+      selectedNodes: new Set(),
+      edges: state.edges.map((e) => ({
+        ...e,
+        selected: false,
+        style: { ...e.style, stroke: "#888" },
+        markerEnd: { ...e.markerEnd, color: "#888" },
+      })),
+    })),
 
   setSelectedNode: (nodeId, multi = false) =>
     set((state) => {
@@ -119,11 +114,17 @@ export const useStore = create((set, get) => ({
 
       if (!multi) next.clear();
 
-      if (next.has(nodeId)) next.delete(nodeId);
-      else next.add(nodeId);
+      if (nodeId) {
+        if (next.has(nodeId)) next.delete(nodeId);
+        else next.add(nodeId);
+      }
 
       return {
         selectedNodes: next,
+        nodes: state.nodes.map((n) => ({
+          ...n,
+          selected: next.has(n.id),
+        })),
         edges: multi
           ? state.edges
           : state.edges.map((e) => ({
@@ -134,6 +135,4 @@ export const useStore = create((set, get) => ({
           })),
       };
     }),
-
-
 }));
