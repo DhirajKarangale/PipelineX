@@ -9,6 +9,21 @@ const TextNode = ({ id, data }) => {
   const [variables, setVariables] = useState([]);
   const updateNodeInternals = useUpdateNodeInternals();
 
+  const JS_KEYWORDS = new Set([
+    "break", "case", "catch", "class", "const", "continue", "debugger", "default",
+    "delete", "do", "else", "export", "extends", "finally", "for", "function", "if",
+    "import", "in", "instanceof", "new", "return", "super", "switch", "this", "throw",
+    "try", "typeof", "var", "void", "while", "with", "yield", "let", "static", "enum",
+    "await", "implements", "package", "protected", "interface", "private", "public",
+  ]);
+
+  const isValidJSVariable = (name) => {
+    if (!name) return false;
+    if (!/^[$A-Z_][0-9A-Z_$]*$/i.test(name)) return false;
+    if (JS_KEYWORDS.has(name)) return false;
+    return true;
+  }
+
   const handleTextChange = (e) => {
     const value = e.target.value;
     setText(value);
@@ -17,7 +32,8 @@ const TextNode = ({ id, data }) => {
 
   const updateVariables = (textValue) => {
     const matches = textValue.match(/\{\{([^}]+)\}\}/g) || [];
-    const vars = matches.map((match) => match.slice(2, -2).trim());
+    const vars = matches.map(m => m.slice(2, -2).trim()).filter(isValidJSVariable);
+
     setVariables([...new Set(vars)]);
     updateNodeInternals(id);
   }
