@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { DraggableNode } from "./draggableNode";
-import { SubmitButton } from "./submit";
+import DraggableNode from "./draggableNode";
+import SubmitButton from "./submit";
 import { NODE_ITEMS } from "./toolbarConfig";
 
 export const Toolbar = () => {
@@ -28,7 +28,7 @@ export const Toolbar = () => {
         ))}
       </div>
 
-      <div className="flex-shrink-0 pl-3 border-l border-gray-300">
+      <div className="flex-shrink-0 pl-3">
         <SubmitButton />
       </div>
     </motion.div>

@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 
-export const DraggableNode = memo(({ type, label, icon: Icon }) => {
+const DraggableNode = (({ type, label, icon: Icon }) => {
   const onDragStart = (event, nodeType) => {
     const appData = { nodeType };
     event.dataTransfer.setData(
@@ -39,3 +39,5 @@ export const DraggableNode = memo(({ type, label, icon: Icon }) => {
     </motion.div>
   );
 });
+
+export default memo(DraggableNode);

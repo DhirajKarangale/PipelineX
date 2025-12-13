@@ -57,7 +57,6 @@ export const Home = () => {
     getNodeID,
     addNode,
     removeNode,
-    setSelectedNode,
     clearSelection,
     setEdges,
     onNodesChange,

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-export const ModalNotification = ({ close, data }) => {
+export const ModalNotification = ({ close, data, error }) => {
   const closeBtnRef = useRef(null);
 
   useEffect(() => {
@@ -21,7 +21,9 @@ export const ModalNotification = ({ close, data }) => {
     };
   }, [close]);
 
-  if (!data) return null;
+  if (!data && !error) return null;
+
+  const isError = Boolean(error);
 
   return (
     <AnimatePresence>
@@ -31,11 +33,13 @@ export const ModalNotification = ({ close, data }) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
+        {/* Backdrop */}
         <div
           onClick={close}
           className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         />
 
+        {/* Modal */}
         <motion.div
           initial={{ scale: 0.95, opacity: 0, y: 10 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -52,6 +56,7 @@ export const ModalNotification = ({ close, data }) => {
           "
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Close button */}
           <button
             ref={closeBtnRef}
             onClick={close}
@@ -65,51 +70,71 @@ export const ModalNotification = ({ close, data }) => {
             <X size={20} />
           </button>
 
-          <div className="text-5xl mb-3">🥳</div>
-
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">
-            Submission Successful!
-          </h2>
-
-          <p className="text-sm text-gray-500 mb-4">
-            Your graph has been submitted successfully
-          </p>
-
-          <div className="border-t border-gray-200 my-4" />
-
-          <div className="text-sm text-gray-700 space-y-1">
-            <div>
-              <span className="font-medium">Number of Nodes:</span>{" "}
-              {data.num_nodes}
-            </div>
-            <div>
-              <span className="font-medium">Number of Edges:</span>{" "}
-              {data.num_edges}
-            </div>
-
-            <div
-              className={`font-semibold mt-2 ${data.is_dag ? "text-green-600" : "text-red-600"
-                }`}
-            >
-              {data.is_dag
-                ? "Graph is a Directed Acyclic Graph (DAG)"
-                : "Graph is NOT a Directed Acyclic Graph (DAG)"}
-            </div>
+          {/* Icon */}
+          <div className="text-5xl mb-3">
+            {isError ? "❌" : "🥳"}
           </div>
 
+          {/* Title */}
+          <h2
+            className={`text-lg font-semibold mb-1 ${isError ? "text-red-600" : "text-gray-800"
+              }`}
+          >
+            {isError ? "Submission Failed" : "Submission Successful!"}
+          </h2>
+
+          {/* Message */}
+          <p className="text-sm text-gray-500 mb-4">
+            {isError
+              ? error
+              : "Your graph has been submitted successfully"}
+          </p>
+
+          {/* Success details */}
+          {!isError && data && (
+            <>
+              <div className="border-t border-gray-200 my-4" />
+
+              <div className="text-sm text-gray-700 space-y-1">
+                <div>
+                  <span className="font-medium">Number of Nodes:</span>{" "}
+                  {data.num_nodes}
+                </div>
+                <div>
+                  <span className="font-medium">Number of Edges:</span>{" "}
+                  {data.num_edges}
+                </div>
+
+                <div
+                  className={`font-semibold mt-2 ${data.is_dag
+                    ? "text-green-600"
+                    : "text-red-600"
+                    }`}
+                >
+                  {data.is_dag
+                    ? "Graph is a Directed Acyclic Graph (DAG)"
+                    : "Graph is NOT a Directed Acyclic Graph (DAG)"}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Action */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={close}
-            className="
+            className={`
               mt-5
               px-6 py-2
               rounded-full
-              bg-sky-500 text-white font-semibold text-sm
-              shadow-[0_4px_14px_rgba(56,189,248,0.6)]
-              hover:bg-sky-600
+              text-white font-semibold text-sm
               transition-all
-            "
+              ${isError
+                ? "bg-red-500 hover:bg-red-600 shadow-[0_4px_14px_rgba(239,68,68,0.6)]"
+                : "bg-sky-500 hover:bg-sky-600 shadow-[0_4px_14px_rgba(56,189,248,0.6)]"
+              }
+            `}
           >
             Close
           </motion.button>

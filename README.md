@@ -92,6 +92,29 @@ cd PipelineX
 ## 2️⃣ Backend Setup (FastAPI)
 ```bash
 cd backend
+### Windows
+```
+python -m venv venv
+```
+
+### macOS/Linux
+```
+python3 -m venv venv
+```
+## 4️⃣ Activate Environment
+
+### Windows
+```
+venv\Scripts\activate
+```
+
+### macOS/Linux
+```
+source venv/bin/activate
+```
+
+pip install -r requirements.txt
+
 pip install fastapi uvicorn
 uvicorn main:app --reload
 ```

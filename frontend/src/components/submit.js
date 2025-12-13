@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { memo, useState, useEffect, useCallback } from "react";
 import { shallow } from "zustand/shallow";
 import { motion } from "framer-motion";
 import { useStore } from "../store/store";
@@ -9,7 +9,7 @@ const selector = (state) => ({
   edges: state.edges,
 });
 
-export const SubmitButton = () => {
+const SubmitButton = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
   const apiUrl = `${baseUrl}/pipelines/parse`;
 
@@ -17,6 +17,7 @@ export const SubmitButton = () => {
 
   const [submitted, setSubmitted] = useState(false);
   const [currData, setCurrData] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleClick = useCallback(async () => {
@@ -26,28 +27,34 @@ export const SubmitButton = () => {
 
     try {
       setLoading(true);
+      setError(null);
 
       const response = await fetch(apiUrl, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        const text = await response.text();
+
+        const match = text.match(/<pre>(.*?)<\/pre>/s);
+        const errorMsg = match ? match[1] : `Request failed (${response.status})`;
+
+        throw new Error(errorMsg);
       }
 
       const data = await response.json();
       setCurrData(data);
       setSubmitted(true);
     } catch (err) {
-      console.error("Error posting pipeline:", err);
+      setError(err.message || "Something went wrong");
+      setSubmitted(true);
     } finally {
       setLoading(false);
     }
   }, [loading, nodes, edges, apiUrl]);
+
 
   useEffect(() => {
     const handler = (e) => {
@@ -64,8 +71,13 @@ export const SubmitButton = () => {
     <div className="flex items-center justify-center">
       {submitted && (
         <ModalNotification
-          close={() => setSubmitted(false)}
+          close={() => {
+            setSubmitted(false);
+            setError(null);
+            setCurrData(null);
+          }}
           data={currData}
+          error={error}
         />
       )}
 
@@ -93,3 +105,5 @@ export const SubmitButton = () => {
     </div>
   );
 };
+
+export default memo(SubmitButton);
