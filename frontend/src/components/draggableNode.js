@@ -1,4 +1,3 @@
-// draggableNode.jsx
 import { memo } from "react";
 import { motion } from "framer-motion";
 
@@ -29,7 +28,6 @@ export const DraggableNode = memo(({ type, label, icon: Icon }) => {
         hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)]
         transition-shadow duration-150
       "
-      /* Framer Motion */
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >

@@ -1,4 +1,3 @@
-// Toolbar.jsx
 import { motion } from "framer-motion";
 import { DraggableNode } from "./draggableNode";
 import { SubmitButton } from "./submit";
@@ -7,7 +6,6 @@ import { NODE_ITEMS } from "./toolbarConfig";
 export const Toolbar = () => {
   return (
     <motion.div
-      /* Framer Motion */
       initial={{ y: -8, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
@@ -19,7 +17,6 @@ export const Toolbar = () => {
         gap-y-2
       "
     >
-      {/* Node palette */}
       <div className="flex flex-wrap gap-2 flex-1">
         {NODE_ITEMS.map(({ type, label, icon }) => (
           <DraggableNode
@@ -31,7 +28,6 @@ export const Toolbar = () => {
         ))}
       </div>
 
-      {/* Divider + Submit */}
       <div className="flex-shrink-0 pl-3 border-l border-gray-300">
         <SubmitButton />
       </div>

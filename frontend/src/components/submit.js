@@ -20,7 +20,7 @@ export const SubmitButton = () => {
   const [loading, setLoading] = useState(false);
 
   const handleClick = useCallback(async () => {
-    if (loading) return; // ✅ prevent double submit
+    if (loading) return;
 
     const payload = { nodes, edges };
 
@@ -49,7 +49,6 @@ export const SubmitButton = () => {
     }
   }, [loading, nodes, edges, apiUrl]);
 
-  /* ⌨️ Ctrl / Cmd + Enter submit */
   useEffect(() => {
     const handler = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {

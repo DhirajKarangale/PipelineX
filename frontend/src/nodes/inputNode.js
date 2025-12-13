@@ -59,7 +59,7 @@ const InputNode = ({ id, data }) => {
         </select>
 
         <div className="text-xs text-gray-500 italic">
-          Provides {type.toLowerCase()} input to the flow
+          Provides <span className="font-medium">{type}</span> input to the flow
         </div>
       </div>
     </BaseNode>

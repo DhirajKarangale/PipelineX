@@ -19,12 +19,11 @@ const MergeNode = ({ id, data }) => {
       additionalStyle=""
       title="Merge"
       icon={Merge}
-      inputs={[{ id: "a" }, { id: "b" }, { id: "c" }]}
+      inputs={[{ id: "a" }, { id: "b" }]}
       outputs={[{ id: "merged" }]}
     >
       <div className="w-full flex flex-col gap-2 text-sm">
 
-        {/* Merge strategy */}
         <select
           value={strategy}
           onChange={(e) => setStrategy(e.target.value)}
