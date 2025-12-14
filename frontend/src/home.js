@@ -146,7 +146,7 @@ const Home = () => {
 
         <MiniMap
           position="bottom-left"
-          className="ml-14 mb-2 rounded-md border border-gray-300"
+          style={{ marginLeft: "50px" }}
         />
       </ReactFlow>
     </motion.div>
