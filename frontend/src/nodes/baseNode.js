@@ -113,8 +113,8 @@ const BaseNode = ({
                 whileHover={{ boxShadow: "0 10px 25px rgba(0,0,0,0.12)" }}
                 onAnimationComplete={() => updateNodeInternals(id)}
                 className={`${additionalStyle} bg-gray-100 p-2
-          flex flex-col gap-2 border rounded-md cursor-pointer
-          ${isSelected ? "border-blue-500" : "border-gray-400"}`}
+                flex flex-col gap-2 border rounded-md cursor-pointer
+                ${isSelected ? "border-blue-500" : "border-gray-400"}`}
             >
                 <div className="flex items-center text-gray-600 text-sm">
                     <div className="flex items-center gap-2 flex-1">
