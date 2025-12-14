@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useMemo, memo, useState, useRef, useCallback, useEffect } from "react";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import { motion } from "framer-motion";
 import { useStore } from "./store/store";
@@ -18,36 +18,24 @@ import "reactflow/dist/style.css";
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
-const nodeTypes = {
-  customInput: InputNode,
-  llm: LLMNode,
-  customOutput: OutputNode,
-  text: TextNode,
-  number: NumberNode,
-  condition: ConditionNode,
-  delay: DelayNode,
-  merge: MergeNode,
-  apiRequest: ApiRequestNode,
-};
-
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  selectedNodes: state.selectedNodes,
-  getNodeID: state.getNodeID,
-  addNode: state.addNode,
-  removeNode: state.removeNode,
-  setSelectedNode: state.setSelectedNode,
-  clearSelection: state.clearSelection,
-  setEdges: state.setEdges,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
-
-export const Home = () => {
+const Home = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  const nodeTypes = useMemo(
+    () => ({
+      customInput: InputNode,
+      llm: LLMNode,
+      customOutput: OutputNode,
+      text: TextNode,
+      number: NumberNode,
+      condition: ConditionNode,
+      delay: DelayNode,
+      merge: MergeNode,
+      apiRequest: ApiRequestNode,
+    }),
+    []
+  );
 
   const {
     nodes,
@@ -193,3 +181,5 @@ export const Home = () => {
     </motion.div>
   );
 };
+
+export default memo(Home);

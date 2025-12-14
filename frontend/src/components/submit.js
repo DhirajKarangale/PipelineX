@@ -23,6 +23,9 @@ const SubmitButton = () => {
       return;
     }
 
+    console.log("Nodes: ", nodes);
+    console.log("Edges: ", edges);
+
     const payload = { nodes, edges };
 
     try {

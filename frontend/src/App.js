@@ -1,5 +1,5 @@
-import { Home } from './home';
-import { Toolbar } from './components/toolbar';
+import Home from './home';
+import Toolbar from './components/toolbar';
 
 function App() {
   return (

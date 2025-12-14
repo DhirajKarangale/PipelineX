@@ -1,9 +1,10 @@
+import { memo } from "react";
 import { motion } from "framer-motion";
 import DraggableNode from "./draggableNode";
 import SubmitButton from "./submit";
 import { NODE_ITEMS } from "./toolbarConfig";
 
-export const Toolbar = () => {
+const Toolbar = () => {
   return (
     <motion.div
       initial={{ y: -8, opacity: 0 }}
@@ -34,3 +35,5 @@ export const Toolbar = () => {
     </motion.div>
   );
 };
+
+export default memo(Toolbar);
