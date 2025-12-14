@@ -85,6 +85,7 @@ PipelineX/
 │   │   ├── submit.js
 │   │   ├── toolbar.js
 │   │   └── App.js
+│   ├── .env
 │   └── package.json
 │
 └── README.md
@@ -140,7 +141,19 @@ Backend runs at: **http://localhost:8000**
 
 ---
 
-### 3️⃣ Frontend Setup (React)
+### 3️⃣ Frontend Environment Setup
+
+Create a `.env` file inside the **frontend** directory:
+
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+Replace the URL if your backend is hosted elsewhere.
+
+---
+
+### 4️⃣ Frontend Setup (React)
 
 ```bash
 cd frontend
