@@ -37,33 +37,53 @@ export const useStore = create((set, get) => ({
 
   setEdges: (edges) => set({ edges }),
 
-  onEdgesChange: (changes) => {
+  // onEdgesChange: (changes) => {
+  //   set((state) => {
+  //     const updatedEdges = applyEdgeChanges(changes, state.edges).map((edge) => ({
+  //       ...edge,
+  //       style: {
+  //         ...edge.style,
+  //         stroke: edge.selected ? "#3b82f6" : "#888",
+  //       },
+  //       markerEnd: {
+  //         ...edge.markerEnd,
+  //         color: edge.selected ? "#3b82f6" : "#888",
+  //       },
+  //     }));
+
+  //     const anyEdgeSelected = updatedEdges.some((e) => e.selected);
+
+  //     if (anyEdgeSelected && !state.isMultiSelect) {
+  //       return {
+  //         edges: updatedEdges,
+  //         nodes: state.nodes.map((n) => ({ ...n, selected: false })),
+  //         selectedNodes: new Set(),
+  //       };
+  //     }
+
+  //     return { edges: updatedEdges };
+  //   });
+  // },
+
+  onEdgesChange: (changes) =>
     set((state) => {
-      const updatedEdges = applyEdgeChanges(changes, state.edges).map((edge) => ({
-        ...edge,
-        style: {
-          ...edge.style,
-          stroke: edge.selected ? "#3b82f6" : "#888",
-        },
-        markerEnd: {
-          ...edge.markerEnd,
-          color: edge.selected ? "#3b82f6" : "#888",
-        },
-      }));
+      const nextEdges = applyEdgeChanges(changes, state.edges);
 
-      const anyEdgeSelected = updatedEdges.some((e) => e.selected);
+      return {
+        edges: nextEdges.map((edge) => ({
+          ...edge,
+          style: {
+            ...edge.style,
+            stroke: edge.selected ? "#3b82f6" : "#888",
+          },
+          markerEnd: {
+            ...edge.markerEnd,
+            color: edge.selected ? "#3b82f6" : "#888",
+          },
+        })),
+      };
+    }),
 
-      if (anyEdgeSelected && !state.isMultiSelect) {
-        return {
-          edges: updatedEdges,
-          nodes: state.nodes.map((n) => ({ ...n, selected: false })),
-          selectedNodes: new Set(),
-        };
-      }
-
-      return { edges: updatedEdges };
-    });
-  },
   onConnect: (connection) => {
     set({
       edges: addEdge(

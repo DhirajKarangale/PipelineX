@@ -55,20 +55,30 @@ const Home = () => {
     const handleKeyDown = (e) => {
       if (e.key !== "Delete") return;
 
-      const { nodes, edges } = useStore.getState();
+      // const { nodes, edges } = useStore.getState();
 
-      const selectedNodeIds = nodes.filter((n) => n.selected).map((n) => n.id);
-      const selectedEdges = edges.filter((e) => e.selected);
+      // const selectedNodeIds = nodes.filter((n) => n.selected).map((n) => n.id);
+      // const selectedEdges = edges.filter((e) => e.selected);
 
-      selectedNodeIds.forEach((id) => {
-        useStore.getState().removeNode(id);
-      });
+      // selectedNodeIds.forEach((id) => {
+      //   useStore.getState().removeNode(id);
+      // });
 
-      if (selectedEdges.length) {
-        useStore
-          .getState()
-          .setEdges(edges.filter((e) => !e.selected));
-      }
+      // if (selectedEdges.length) {
+      //   useStore
+      //     .getState()
+      //     .setEdges(edges.filter((e) => !e.selected));
+      // }
+
+
+
+      const { nodes } = useStore.getState();
+
+      nodes
+        .filter((n) => n.selected)
+        .forEach((n) => useStore.getState().removeNode(n.id));
+
+
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -168,6 +178,7 @@ const Home = () => {
         snapGrid={[gridSize, gridSize]}
         connectionLineType="smoothstep"
         className="h-full"
+        deleteKeyCode="Delete"  
       >
         <Background color="#e5e7eb" gap={gridSize} />
 

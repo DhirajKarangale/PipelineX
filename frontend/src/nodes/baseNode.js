@@ -37,7 +37,7 @@ const BaseNode = ({
                 e.stopPropagation();
                 setSelectedNode(id, e.ctrlKey || e.metaKey);
             }}
-            className="relative w-[200px] min-h-[100px] overflow-visible"
+            className="relative w-[200px] min-h-[100px] overflow-visible select-none"
         >
             {inputs.map((input, index) => (
                 <Handle
