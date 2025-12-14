@@ -13,8 +13,8 @@ const BaseNode = ({
     inputs = [],
     outputs = [],
 }) => {
-    const { selectedNodes, setSelectedNode, removeNode } = useStore((state) => ({
-        removeNode: state.removeNode,
+    const { selectedNodes, setSelectedNode, removeNodeById } = useStore((state) => ({
+        removeNodeById: state.removeNodeById,
         selectedNodes: state.selectedNodes,
         setSelectedNode: state.setSelectedNode,
     }));
@@ -28,7 +28,7 @@ const BaseNode = ({
 
     const handleRemove = (e) => {
         e.stopPropagation();
-        removeNode(id);
+        removeNodeById(id);
     };
 
     return (
@@ -40,29 +40,64 @@ const BaseNode = ({
             className="relative w-[200px] min-h-[100px] overflow-visible select-none"
         >
             {inputs.map((input, index) => (
-                <Handle
-                    key={`in-${index}`}
-                    type="target"
-                    position={Position.Left}
-                    id={`${id}-${input.id}`}
-                    className="handle"
-                    style={{
-                        top: `${((index + 1) * 100) / (inputs.length + 1)}%`,
-                    }}
-                />
+                <div key={`in-${index}`}>
+                    <Handle
+                        key={`in-${index}`}
+                        type="target"
+                        position={Position.Left}
+                        id={`${id}-${input.id}`}
+                        className="handle"
+                        style={{
+                            top: `${((index + 1) * 100) / (inputs.length + 1)}%`,
+                        }}
+                    />
+
+                    {input.id && <div
+                        className="absolute right-full mr-1
+                            -translate-y-[110%]
+                            max-w-[90px]
+                            whitespace-nowrap overflow-hidden text-ellipsis
+                            rounded border border-gray-300 bg-white
+                            px-1 py-[1px]
+                            text-[10px] leading-none italic text-gray-600
+                            pointer-events-none"
+                        style={{ top: `${((index + 1) * 100) / (inputs.length + 1)}%` }}
+                    >
+                        {input.id}
+                    </div>}
+
+                </div>
             ))}
 
             {outputs.map((output, index) => (
-                <Handle
-                    key={`out-${index}`}
-                    type="source"
-                    position={Position.Right}
-                    id={`${id}-${output.id}`}
-                    className="handle"
-                    style={{
-                        top: `${((index + 1) * 100) / (outputs.length + 1)}%`,
-                    }}
-                />
+                <div key={`out-${index}`}>
+                    <Handle
+                        key={`out-${index}`}
+                        type="source"
+                        position={Position.Right}
+                        id={`${id}-${output.id}`}
+                        className="handle"
+                        style={{
+                            top: `${((index + 1) * 100) / (outputs.length + 1)}%`,
+                        }}
+                    />
+
+                    {output.id && (
+                        <div
+                            className="absolute left-full ml-1
+                            -translate-y-[110%]
+                            max-w-[90px]
+                            whitespace-nowrap overflow-hidden text-ellipsis
+                            rounded border border-gray-300 bg-white
+                            px-1 py-[1px]
+                            text-[10px] leading-none italic text-gray-600
+                            pointer-events-none"
+                            style={{ top: `${((index + 1) * 100) / (outputs.length + 1)}%` }}
+                        >
+                            {output.id}
+                        </div>)}
+
+                </div>
             ))}
 
             <motion.div

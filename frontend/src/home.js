@@ -1,4 +1,4 @@
-import { useMemo, memo, useState, useRef, useCallback, useEffect } from "react";
+import { memo, useState, useRef, useCallback, useEffect } from "react";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import { motion } from "framer-motion";
 import { useStore } from "./store/store";
@@ -37,28 +37,13 @@ const Home = () => {
   const {
     nodes,
     edges,
-    selectedNodes,
     getNodeID,
     addNode,
-    removeNode,
     clearSelection,
-    setEdges,
     onNodesChange,
     onEdgesChange,
     onConnect,
   } = useStore();
-
-  // useEffect(() => {
-  //   const handleKeyDown = (e) => {
-  //     if (e.key !== "Delete") return;
-  //     nodes
-  //       .filter((n) => n.selected)
-  //       .forEach((n) => removeNode(n.id));
-  //   };
-
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   return () => window.removeEventListener("keydown", handleKeyDown);
-  // }, [selectedNodes, edges, removeNode, setEdges]);
 
   useEffect(() => {
     const down = (e) => {

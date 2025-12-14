@@ -91,19 +91,20 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  // removeNode: (nodeId) => {
-  //   set({
-  //     nodes: get().nodes.filter((node) => node.id !== nodeId),
-  //     edges: get().edges.filter(
-  //       (edge) => edge.source !== nodeId && edge.target !== nodeId
-  //     ),
-  //     selectedNode: get().selectedNode === nodeId ? null : get().selectedNode,
-  //   });
-  // },
-
   removeNode: (nodeId) =>
     set((state) => ({
       nodes: state.nodes.filter(n => n.id !== nodeId),
+    })),
+
+  removeNodeById: (nodeId) =>
+    set((state) => ({
+      nodes: applyNodeChanges(
+        [{ type: "remove", id: nodeId }],
+        state.nodes
+      ),
+      edges: state.edges.filter(
+        (e) => e.source !== nodeId && e.target !== nodeId
+      ),
     })),
 
   clearSelection: () =>
