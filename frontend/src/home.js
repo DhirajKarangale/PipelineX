@@ -18,24 +18,21 @@ import "reactflow/dist/style.css";
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
+const nodeTypes = {
+  customInput: InputNode,
+  llm: LLMNode,
+  customOutput: OutputNode,
+  text: TextNode,
+  number: NumberNode,
+  condition: ConditionNode,
+  delay: DelayNode,
+  merge: MergeNode,
+  apiRequest: ApiRequestNode,
+};
+
 const Home = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
-  const nodeTypes = useMemo(
-    () => ({
-      customInput: InputNode,
-      llm: LLMNode,
-      customOutput: OutputNode,
-      text: TextNode,
-      number: NumberNode,
-      condition: ConditionNode,
-      delay: DelayNode,
-      merge: MergeNode,
-      apiRequest: ApiRequestNode,
-    }),
-    []
-  );
 
   const {
     nodes,
@@ -51,39 +48,17 @@ const Home = () => {
     onConnect,
   } = useStore();
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key !== "Delete") return;
+  // useEffect(() => {
+  //   const handleKeyDown = (e) => {
+  //     if (e.key !== "Delete") return;
+  //     nodes
+  //       .filter((n) => n.selected)
+  //       .forEach((n) => removeNode(n.id));
+  //   };
 
-      // const { nodes, edges } = useStore.getState();
-
-      // const selectedNodeIds = nodes.filter((n) => n.selected).map((n) => n.id);
-      // const selectedEdges = edges.filter((e) => e.selected);
-
-      // selectedNodeIds.forEach((id) => {
-      //   useStore.getState().removeNode(id);
-      // });
-
-      // if (selectedEdges.length) {
-      //   useStore
-      //     .getState()
-      //     .setEdges(edges.filter((e) => !e.selected));
-      // }
-
-
-
-      const { nodes } = useStore.getState();
-
-      nodes
-        .filter((n) => n.selected)
-        .forEach((n) => useStore.getState().removeNode(n.id));
-
-
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedNodes, edges, removeNode, setEdges]);
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => window.removeEventListener("keydown", handleKeyDown);
+  // }, [selectedNodes, edges, removeNode, setEdges]);
 
   useEffect(() => {
     const down = (e) => {
@@ -178,7 +153,7 @@ const Home = () => {
         snapGrid={[gridSize, gridSize]}
         connectionLineType="smoothstep"
         className="h-full"
-        deleteKeyCode="Delete"  
+        deleteKeyCode="Delete"
       >
         <Background color="#e5e7eb" gap={gridSize} />
 

@@ -1,10 +1,5 @@
 import { create } from "zustand";
-import {
-  addEdge,
-  applyNodeChanges,
-  applyEdgeChanges,
-  MarkerType,
-} from "reactflow";
+import { addEdge, applyNodeChanges, applyEdgeChanges, MarkerType } from "reactflow";
 
 export const useStore = create((set, get) => ({
   nodes: [],
@@ -29,41 +24,27 @@ export const useStore = create((set, get) => ({
       nodes: [...get().nodes, node],
     });
   },
-  onNodesChange: (changes) => {
-    set({
-      nodes: applyNodeChanges(changes, get().nodes),
-    });
-  },
+
+  onNodesChange: (changes) =>
+    set((state) => {
+      const nextNodes = applyNodeChanges(changes, state.nodes);
+
+      const removedNodeIds = changes
+        .filter(c => c.type === "remove")
+        .map(c => c.id);
+
+      const nextEdges = state.edges.filter(
+        e => !removedNodeIds.includes(e.source) &&
+          !removedNodeIds.includes(e.target)
+      );
+
+      return {
+        nodes: nextNodes,
+        edges: nextEdges,
+      };
+    }),
 
   setEdges: (edges) => set({ edges }),
-
-  // onEdgesChange: (changes) => {
-  //   set((state) => {
-  //     const updatedEdges = applyEdgeChanges(changes, state.edges).map((edge) => ({
-  //       ...edge,
-  //       style: {
-  //         ...edge.style,
-  //         stroke: edge.selected ? "#3b82f6" : "#888",
-  //       },
-  //       markerEnd: {
-  //         ...edge.markerEnd,
-  //         color: edge.selected ? "#3b82f6" : "#888",
-  //       },
-  //     }));
-
-  //     const anyEdgeSelected = updatedEdges.some((e) => e.selected);
-
-  //     if (anyEdgeSelected && !state.isMultiSelect) {
-  //       return {
-  //         edges: updatedEdges,
-  //         nodes: state.nodes.map((n) => ({ ...n, selected: false })),
-  //         selectedNodes: new Set(),
-  //       };
-  //     }
-
-  //     return { edges: updatedEdges };
-  //   });
-  // },
 
   onEdgesChange: (changes) =>
     set((state) => {
@@ -110,15 +91,20 @@ export const useStore = create((set, get) => ({
     });
   },
 
-  removeNode: (nodeId) => {
-    set({
-      nodes: get().nodes.filter((node) => node.id !== nodeId),
-      edges: get().edges.filter(
-        (edge) => edge.source !== nodeId && edge.target !== nodeId
-      ),
-      selectedNode: get().selectedNode === nodeId ? null : get().selectedNode,
-    });
-  },
+  // removeNode: (nodeId) => {
+  //   set({
+  //     nodes: get().nodes.filter((node) => node.id !== nodeId),
+  //     edges: get().edges.filter(
+  //       (edge) => edge.source !== nodeId && edge.target !== nodeId
+  //     ),
+  //     selectedNode: get().selectedNode === nodeId ? null : get().selectedNode,
+  //   });
+  // },
+
+  removeNode: (nodeId) =>
+    set((state) => ({
+      nodes: state.nodes.filter(n => n.id !== nodeId),
+    })),
 
   clearSelection: () =>
     set((state) => ({
