@@ -1,0 +1,156 @@
+import { memo, useState, useRef, useCallback, useEffect } from "react";
+import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
+import { motion } from "framer-motion";
+import { useStore } from "./store/store";
+
+import InputNode from "./nodes/inputNode";
+import LLMNode from "./nodes/llmNode";
+import OutputNode from "./nodes/outputNode";
+import TextNode from "./nodes/textNode";
+import NumberNode from "./nodes/numberNode";
+import ConditionNode from "./nodes/conditionNode";
+import DelayNode from "./nodes/delayNode";
+import MergeNode from "./nodes/mergeNode";
+import ApiRequestNode from "./nodes/apiRequestNode";
+
+import "reactflow/dist/style.css";
+
+const gridSize = 20;
+const proOptions = { hideAttribution: true };
+
+const nodeTypes = {
+  customInput: InputNode,
+  llm: LLMNode,
+  customOutput: OutputNode,
+  text: TextNode,
+  number: NumberNode,
+  condition: ConditionNode,
+  delay: DelayNode,
+  merge: MergeNode,
+  apiRequest: ApiRequestNode,
+};
+
+const Home = () => {
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  const {
+    nodes,
+    edges,
+    getNodeID,
+    addNode,
+    clearSelection,
+    onNodesChange,
+    onEdgesChange,
+    onConnect,
+  } = useStore();
+
+  useEffect(() => {
+    const down = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        useStore.getState().setMultiSelect(true);
+      }
+    };
+
+    const up = () => {
+      useStore.getState().setMultiSelect(false);
+    };
+
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
+
+    return () => {
+      window.removeEventListener("keydown", down);
+      window.removeEventListener("keyup", up);
+    };
+  }, []);
+
+  const getInitNodeData = (nodeID, type) => ({
+    id: nodeID,
+    nodeType: type,
+  });
+
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      if (!reactFlowInstance || !reactFlowWrapper.current) return;
+
+      const bounds = reactFlowWrapper.current.getBoundingClientRect();
+      const raw = event.dataTransfer.getData("application/reactflow");
+      if (!raw) return;
+
+      const { nodeType } = JSON.parse(raw);
+      if (!nodeType) return;
+
+      const position = reactFlowInstance.project({
+        x: event.clientX - bounds.left,
+        y: event.clientY - bounds.top,
+      });
+
+      const nodeID = getNodeID(nodeType);
+
+      addNode({
+        id: nodeID,
+        type: nodeType,
+        position,
+        data: getInitNodeData(nodeID, nodeType),
+      });
+    },
+    [reactFlowInstance, addNode, getNodeID]
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
+      ref={reactFlowWrapper}
+      onClick={(e) => {
+        if (e.target.classList.contains("react-flow__pane")) {
+          clearSelection();
+        }
+      }}
+      className="
+        w-full h-[86vh]
+        rounded-lg
+        border border-gray-300
+        overflow-hidden
+        bg-white
+      "
+    >
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onInit={setReactFlowInstance}
+        proOptions={proOptions}
+        snapGrid={[gridSize, gridSize]}
+        connectionLineType="smoothstep"
+        className="h-full"
+        deleteKeyCode="Delete"
+      >
+        <Background color="#e5e7eb" gap={gridSize} />
+
+        <Controls position="bottom-left" />
+
+        <MiniMap
+          position="bottom-left"
+          style={{ marginLeft: "50px" }}
+        />
+      </ReactFlow>
+    </motion.div>
+  );
+};
+
+export default memo(Home);

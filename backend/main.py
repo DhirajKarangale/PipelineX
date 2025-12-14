@@ -28,7 +28,6 @@ def parse_pipeline(pipeline: PipelineData):
     num_nodes = len(pipeline.nodes)
     num_edges = len(pipeline.edges)
 
-    # Logic to determine if it is a DAG
     degrees = {}
 
     stack = []
@@ -44,10 +43,8 @@ def parse_pipeline(pipeline: PipelineData):
             stack.append(node["id"])
 
     while len(stack) > 0:
-        # get first element of stack
         currentNode = stack.pop(0)
 
-        # find the connections of that node in edges
         for edge in pipeline.edges:
             if currentNode == edge["source"]:
                 connection = edge["target"]
@@ -58,7 +55,6 @@ def parse_pipeline(pipeline: PipelineData):
 
     dag = True
 
-    # loop through
     for connection in degrees.values():
         if connection > 0:
             dag = False

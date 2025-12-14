@@ -1,62 +1,74 @@
-# 🚀 PipelineX — Visual AI Pipeline Builder
+# 🚀 PipelineX — Visual Workflow & AI Pipeline Builder
 
-PipelineX is a **full‑stack visual pipeline builder** that lets you drag, drop, and connect functional nodes to create AI and automation workflows.  
-Built using **React Flow**, powered by a **FastAPI backend**, and structured for real-world extensibility.
+PipelineX is a **full-stack visual workflow builder** that allows users to design pipelines by dragging, connecting, and configuring modular nodes.  
+It combines an **interactive React Flow–based editor** with a **FastAPI backend** for structural validation, making it suitable for AI workflows, automation pipelines, and data processing graphs.
 
 ---
 
-# 🎥 Live Preview
+## 🎥 Preview
 
-### ⚡ Demo GIF — Build a Pipeline Visually
+### ⚡ Visual Pipeline Builder (Demo)
 ![PipelineX Demo](preview/PipelineX.gif)
 
-### 🌟 PipelineX Screenshot
+### 🖼 Application Screenshot
 ![PipelineX Screenshot](preview/PipelineX.png)
 
 ---
 
-# ✨ Features
+## ✨ Key Features
 
-### 🎛 Visual Pipeline Editor  
-- Drag‑and‑drop nodes  
-- Connect inputs → processors → outputs  
-- Smart responsive toolbar  
-- Shared abstraction across all node types  
+### 🎛 Visual Pipeline Editor
+- Drag-and-drop node creation  
+- Connect nodes via input/output handles  
+- Grid-snapped canvas with minimap & controls  
+- Unified node abstraction for rapid extensibility  
+- Multi-select and keyboard-driven deletion  
 
-### 🔍 Backend Validation (FastAPI)  
-- Counts nodes  
-- Counts edges  
-- Validates if the graph is a DAG (no circular pipelines)
-
-### 🧩 Rich Node Library  
+### 🧩 Extensible Node System
 - Input  
-- Text Processor  
-- File Upload  
-- LLM  
-- Decision  
-- Merge  
 - Output  
-- Result
+- Text (supports `{{variable}}` handles)  
+- LLM  
+- Number  
+- Condition  
+- Delay  
+- Merge  
+- API Request  
 
-### 🎨 UI Enhancements  
-- Clean, unified styling  
-- Dynamic text resizing  
-- Variable handle support using `{{variable}}`  
+All nodes share a common base abstraction, enabling consistent styling and behavior while minimizing duplicated logic.
+
+### 📝 Smart Text Node
+- Auto-resizing text input  
+- Dynamic input handles generated from `{{variable}}`  
+- JavaScript-safe variable validation  
+- Real-time node layout updates  
+
+### 🔍 Backend Graph Validation
+- Counts total nodes  
+- Counts total edges  
+- Detects whether the pipeline is a **Directed Acyclic Graph (DAG)**  
+- Prevents circular dependencies in workflows  
+
+### 🎨 Polished UI & UX
+- Clean, unified design using Tailwind CSS  
+- Smooth animations with Framer Motion  
+- Accessible modal notifications  
+- Keyboard shortcuts (Ctrl / Cmd + Enter to submit)  
 
 ---
 
-# ⚙️ Tech Stack
+## ⚙️ Tech Stack
 
-| Layer     | Technologies |
-|-----------|--------------|
-| Frontend  | React, React Flow, Zustand |
-| Backend   | FastAPI, Python, Uvicorn |
-| Cache     | Redis (Docker) |
-| Dev Tools | Node.js, npm |
+| Layer | Technologies |
+|------|--------------|
+| Frontend | React, React Flow, Zustand, Tailwind CSS |
+| Backend | FastAPI, Python, Uvicorn |
+| Animations | Framer Motion |
+| Tooling | Node.js, npm |
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```
 PipelineX/
@@ -68,10 +80,12 @@ PipelineX/
 │   ├── public/
 │   ├── src/
 │   │   ├── nodes/
-│   │   ├── store.js
-│   │   ├── toolbar.js
+│   │   ├── store/
+│   │   ├── components/
 │   │   ├── submit.js
+│   │   ├── toolbar.js
 │   │   └── App.js
+│   ├── .env
 │   └── package.json
 │
 └── README.md
@@ -79,9 +93,9 @@ PipelineX/
 
 ---
 
-# 🚀 Getting Started
+## 🚀 Getting Started
 
-## 1️⃣ Clone Repository
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/DhirajKarangale/PipelineX.git
 cd PipelineX
@@ -89,38 +103,83 @@ cd PipelineX
 
 ---
 
-## 2️⃣ Backend Setup (FastAPI)
+### 2️⃣ Backend Setup (FastAPI)
+
 ```bash
 cd backend
-pip install fastapi uvicorn
+```
+
+#### Create virtual environment
+**Windows**
+```bash
+python -m venv venv
+```
+
+**macOS / Linux**
+```bash
+python3 -m venv venv
+```
+
+#### Activate environment
+**Windows**
+```bash
+venv\Scripts\activate
+```
+
+**macOS / Linux**
+```bash
+source venv/bin/activate
+```
+
+#### Install dependencies & run server
+```bash
+pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-Backend: **http://localhost:8000**
+Backend runs at: **http://localhost:8000**
 
 ---
 
-## 3️⃣ Frontend Setup (React)
+### 3️⃣ Frontend Environment Setup
+
+Create a `.env` file inside the **frontend** directory:
+
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
+
+Replace the URL if your backend is hosted elsewhere.
+
+---
+
+### 4️⃣ Frontend Setup (React)
+
 ```bash
 cd frontend
 npm install
-npm run start
+npm start
 ```
 
-Frontend: **http://localhost:3000**
+Frontend runs at: **http://localhost:3000**
 
 ---
 
-# 🛠 Usage
+## 🛠 How to Use
 
-1. Open the app (port 3000).  
+1. Open the application in your browser.  
 2. Drag nodes from the toolbar onto the canvas.  
-3. Connect nodes visually.  
-4. Configure each node using the built‑in form.  
-5. Click **Submit** to validate pipeline structure.  
-6. FastAPI returns:  
-   - Node count  
-   - Edge count  
-   - DAG validity  
+3. Connect nodes using input/output handles.  
+4. Configure node properties inline.  
+5. Click **Submit** (or press Ctrl / Cmd + Enter).  
+6. View pipeline statistics and DAG validation in the modal.
 
 ---
+
+## 🔮 Future Improvements
+
+- Persist node configuration to global store  
+- Execute pipelines step-by-step  
+- Export / import pipeline JSON  
+- Type-safe schema validation  
+- Execution logs & runtime visualization  

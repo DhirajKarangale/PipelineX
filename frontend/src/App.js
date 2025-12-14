@@ -1,11 +1,11 @@
-import { PipelineToolbar } from "./toolbar";
-import { PipelineUI } from "./ui";
+import Home from './home';
+import Toolbar from './components/toolbar';
 
 function App() {
   return (
-    <div className="container">
-      <PipelineToolbar />
-      <PipelineUI />
+    <div>
+      <Toolbar />
+      <Home />
     </div>
   );
 }

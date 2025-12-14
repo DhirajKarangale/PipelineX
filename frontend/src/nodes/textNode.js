@@ -1,95 +1,69 @@
-import React, { useState, useCallback } from "react";
-import { BaseNode } from "./baseNode";
-import { Handle, Position } from "reactflow";
+import BaseNode from "./baseNode";
+import { Type } from "lucide-react";
+import { memo, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import { useStore } from "../store";
-import { BsTextareaT } from "react-icons/bs";
+import { useUpdateNodeInternals } from "reactflow";
 
-export const TextNode = ({ id, data, isConnectable }) => {
-  const [text, setText] = useState(data?.text || "text");
+const TextNode = ({ id, data }) => {
+  const [text, setText] = useState(data?.text || "");
+  const [variables, setVariables] = useState([]);
+  const updateNodeInternals = useUpdateNodeInternals();
 
-  const { updateNodeField } = useStore((state) => ({
-    updateNodeField: state.updateNodeField,
-  }));
+  const JS_KEYWORDS = new Set([
+    "break", "case", "catch", "class", "const", "continue", "debugger", "default",
+    "delete", "do", "else", "export", "extends", "finally", "for", "function", "if",
+    "import", "in", "instanceof", "new", "return", "super", "switch", "this", "throw",
+    "try", "typeof", "var", "void", "while", "with", "yield", "let", "static", "enum",
+    "await", "implements", "package", "protected", "interface", "private", "public",
+  ]);
 
-  const handleTextChange = useCallback(
-    (event) => {
-      const newText = event.target.value;
-      setText(newText);
-      updateNodeField(id, "text", newText);
-    },
-    [id, updateNodeField]
-  );
+  const isValidJSVariable = (name) => {
+    if (!name) return false;
+    if (!/^[$A-Z_][0-9A-Z_$]*$/i.test(name)) return false;
+    if (JS_KEYWORDS.has(name)) return false;
+    return true;
+  }
 
-  const extractVariables = (text) => {
-    const regex = /{{\s*(\w+)\s*}}/g;
-    const variables = [];
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-      variables.push(match[1]);
-    }
-    return variables;
-  };
+  const handleTextChange = (e) => {
+    const value = e.target.value;
+    setText(value);
+    updateVariables(value);
+  }
 
-  const variables = extractVariables(text);
+  const updateVariables = (textValue) => {
+    const matches = textValue.match(/\{\{([^}]+)\}\}/g) || [];
+    const vars = matches.map(m => m.slice(2, -2).trim()).filter(isValidJSVariable);
+
+    setVariables([...new Set(vars)]);
+    updateNodeInternals(id);
+  }
 
   return (
     <BaseNode
       id={id}
-      data={data}
+      additionalStyle=""
       title="Text"
-      icon={<BsTextareaT />}
-      additionalStyles={{
-        borderRadius: 6,
-        backgroundColor: "#f5f5f7",
-        padding: 10,
-        minWidth: 180,
-      }}
+      icon={Type}
+      inputs={variables.map((v) => ({ id: v }))}
+      outputs={[{ id: "output" }]}
     >
-      {variables.map((variable, index) => (
-        <Handle
-          key={`left-${variable}`}
-          type="target"
-          position={Position.Left}
-          id={`left-${variable}`}
-          style={{
-            top: `${(100 / (variables.length + 1)) * (index + 1)}%`,
-            background: "#555",
-          }}
-          isConnectable={isConnectable}
-        />
-      ))}
-
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="output"
-        style={{
-          top: "50%",
-          background: "#555",
-        }}
-        isConnectable={isConnectable}
+      <TextareaAutosize
+        minRows={1}
+        value={text}
+        onChange={(e) => handleTextChange(e)}
+        placeholder="Enter text with {{variables}}"
+        className="w-full bg-gray-50 p-1 text-sm resize-none outline-none no-scrollbar 
+        border border-gray-400 focus:ring-1 focus:ring-gray-400/50 transition-all duration-150"
       />
-
-      <label style={{ display: "block", marginTop: 6 }}>
-        <div style={{ fontWeight: "bold", marginBottom: 4, color: "#333", display: "flex", alignItems: "center", gap: 4 }}>
-          <BsTextareaT /> Text
+      {variables.length > 0 && (
+        <div className="w-full h-min bg-gray-200 rounded-md
+          flex flex-wrap justify-start items-center px-2 py-1
+         text-gray-700 text-sm italic">
+          {variables.join(", ")}
         </div>
-        <TextareaAutosize
-          minRows={1}
-          maxRows={50}
-          value={text}
-          onChange={handleTextChange}
-          style={{
-            width: "100%",
-            border: "1px solid #ccc",
-            borderRadius: 4,
-            padding: 5,
-            fontSize: 14,
-            boxSizing: "border-box",
-          }}
-        />
-      </label>
+      )}
     </BaseNode>
   );
-};
+}
+
+export default memo(TextNode);
