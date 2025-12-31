@@ -8,7 +8,7 @@ It combines an **interactive React Flow–based editor** with a **FastAPI backen
 ## 🎥 Preview
 
 ### ⚡ Visual Pipeline Builder (Demo)
-![PipelineX Demo](preview/PipelineX.gif)
+![PipelineX Demo](preview/pipelinex_gif.gif)
 
 ### 🖼 Application Screenshot
 ![PipelineX Screenshot](preview/PipelineX.png)
